@@ -1,0 +1,15 @@
+.mat-toolbar {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    .spacer { flex: 1 1 auto; }
+}
+
+.mat-checkbox {
+    margin-left: 10px;
+    font-size: 15px;
+    font-weight: normal;
+}   

@@ -1,0 +1,21 @@
+<app-topbar (clear)="clear()" (search)="search($event)" (devtool)="devtool()"></app-topbar>
+
+<div class="container">  
+  <mat-card *ngFor="let item of cbfiltered; let index = index" [class.current-clipboard]="isCurrent(item)">
+    <mat-card-header *ngIf="isCurrent(item)">
+      <span>Actuellement dans le presse-papier</span>
+    </mat-card-header>
+    <mat-card-content>
+      <pre *ngIf="item.text && item.text.length > 0" (click)="open(item)">{{ item.text }}</pre>
+      <img *ngIf="item.image" (click)="openImage(item)" [src]="item.image" alt="image">
+    </mat-card-content>
+    <mat-card-actions *ngIf="!isCurrent(item)" >
+      <button mat-button (click)="copy(item)">
+          <mat-icon>content_copy</mat-icon>
+      </button>
+      <sub>{{ item.time | date: 'dd/MM/yyyy HH:mm:ss' }}</sub>
+    </mat-card-actions>
+  </mat-card>
+
+  <p *ngIf="!clipItems || clipItems.length <= 0">Le presse-papier est vide</p>
+</div>

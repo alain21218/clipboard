@@ -1,0 +1,5 @@
+- Ajouter recherche - ok
+- Ajouter suppression item
+- Ajouter clear history - ok
+- Ajouter images
+- bug edit premier element

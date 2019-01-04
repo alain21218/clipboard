@@ -1,0 +1,17 @@
+<mat-toolbar>
+  <button mat-button (click)="clear.emit()">
+    <mat-icon>clear_all</mat-icon>
+  </button>
+  
+  <button *ngIf="!config.production" mat-button (click)="devtool.emit()">
+    <mat-icon>developer_mode</mat-icon>
+  </button>
+  
+  <mat-checkbox color="primary" [formControl]="alwaysOnTop">Premier plan</mat-checkbox>
+  
+  <span class="spacer"></span>
+  
+  <mat-form-field floatLabel="never"> 
+    <input type="text" matInput placeholder="Rechercher" [formControl]="searchKey">
+  </mat-form-field>
+</mat-toolbar>
