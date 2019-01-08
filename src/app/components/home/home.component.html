@@ -9,8 +9,8 @@
       <pre *ngIf="item.text && item.text.length > 0" (click)="open(item)">{{ item.text }}</pre>
       <img *ngIf="item.image" (click)="openImage(item)" [src]="item.image" alt="image">
     </mat-card-content>
-    <mat-card-actions *ngIf="!isCurrent(item)" >
-      <button mat-button (click)="copy(item)">
+    <mat-card-actions>
+      <button mat-button (click)="copy(item)" [disabled]="isCurrent(item)">
           <mat-icon>content_copy</mat-icon>
       </button>
       <button mat-button (click)="favorite(item)">
