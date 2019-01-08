@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { clipboard, nativeImage } from 'electron';
-import { DetailComponent } from '../detail/detail.component';
-import { PictureComponent } from '../picture/picture.component';
 import { ElectronService } from '../../providers/electron.service';
 import { SortByPipe } from '../../pipes/sort-by.pipe';
+import { ClipItem } from '../../models/clip-item';
+import { AppConfig } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-home',
@@ -18,12 +18,13 @@ export class HomeComponent implements OnInit {
   nativeImage = nativeImage;
 
   image: string; // current clipboard image b64
+  text: string; // current clipboard text
+  currentClipboard: ClipItem;
 
   sortBy = new SortByPipe();
 
   constructor(
     private snackbar: MatSnackBar,
-    private dialog: MatDialog,
     private electronService: ElectronService
   ) { }
 
@@ -32,7 +33,8 @@ export class HomeComponent implements OnInit {
     this.repeat = setInterval(() => {
       this.imageTreatment();
       this.textTreatment();
-    }, 500);
+      this.getCurrentClipboard();
+    }, 250);
   }
 
   retrieve() {
@@ -40,16 +42,16 @@ export class HomeComponent implements OnInit {
   }
 
   textTreatment() {
-    const text = clipboard.readText().trim();
-    if (text && text.length > 0) {
-      if (!this.clipItems.some(item => item.text === text)) {
+    this.text = clipboard.readText().trim();
+    if (this.text && this.text.length > 0) {
+      if (!this.clipItems.some(item => item.text === this.text)) {
         this.clipItems.unshift({
-          text,
+          text: this.text,
           time: new Date()
         });
         this.save();
       }
-    }
+    } else { this.text = null; }
   }
   
   save() {
@@ -67,6 +69,16 @@ export class HomeComponent implements OnInit {
         });
         this.save();
       }
+    } else { this.image = null; }
+  }
+
+  getCurrentClipboard() {
+    if(this.text) {
+      this.currentClipboard = this.clipItems.find(item => item.text === this.text);
+    } else if(this.image) {
+      this.currentClipboard = this.clipItems.find(item => item.image === this.image);
+    } else {
+      this.currentClipboard = null;
     }
   }
 
@@ -101,18 +113,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  open(clipitem: ClipItem) {
-    const dialog = this.dialog.open(DetailComponent, {
-      data: clipitem
-    });
-  }
-
-  openImage(clipitem: ClipItem) {
-    const dialog = this.dialog.open(PictureComponent, {
-      data: clipitem
-    });
-  }
-
   clear() {
     if (confirm('Supprimer tout ?')) {
       localStorage.clear();
@@ -130,14 +130,15 @@ export class HomeComponent implements OnInit {
   }
 
   get cbfiltered() {
-    if (!this.searchKey || this.searchKey.length <= 3) { return this.clipItems; }
-    return this.clipItems.filter(item => item.text && item.text.includes(this.searchKey))
+    const removeCurrent = this.clipItems.filter(item => !this.isCurrent(item));
+
+    if (!this.searchKey || this.searchKey.length <= 3) { return removeCurrent; }
+
+    return removeCurrent.filter(item => item.text && item.text.includes(this.searchKey));
   }
 
   isCurrent(clip: ClipItem): boolean {
-    const text = clip.text && clip.text === clipboard.readText();
-    const image = clip.image && clip.image === this.image;
-    return text || image ;
+    return clip === this.currentClipboard;
   }
 
   favorite(item: ClipItem) {
@@ -145,11 +146,10 @@ export class HomeComponent implements OnInit {
     this.save();
     this.retrieve(); // update sort
   }
-}
 
-interface ClipItem {
-  text?: string;
-  time: Date;
-  image?: string, //b64
-  favorite?: boolean
+  delete(clipitem: ClipItem) {
+    const index = this.clipItems.findIndex(item => item === clipitem);
+    this.clipItems.splice(index, 1);
+    this.save();
+  }
 }

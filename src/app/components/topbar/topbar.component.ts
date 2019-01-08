@@ -35,6 +35,5 @@ export class TopbarComponent implements OnInit {
       this.electronService.send('always-on-top', value);
       localStorage.setItem('always-on-top', value);
     });
-
   }
 }

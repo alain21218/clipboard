@@ -1,26 +1,16 @@
 <app-topbar (clear)="clear()" (search)="search($event)" (devtool)="devtool()"></app-topbar>
 
-<div class="container">  
-  <mat-card *ngFor="let item of cbfiltered | sortBy: 'favorite'; let index = index" [class.current-clipboard]="isCurrent(item)">
-    <mat-card-header *ngIf="isCurrent(item)">
-      <span>Actuellement dans le presse-papier</span>
-    </mat-card-header>
-    <mat-card-content>
-      <pre *ngIf="item.text && item.text.length > 0" (click)="open(item)">{{ item.text }}</pre>
-      <img *ngIf="item.image" (click)="openImage(item)" [src]="item.image" alt="image">
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button (click)="copy(item)" [disabled]="isCurrent(item)">
-          <mat-icon>content_copy</mat-icon>
-      </button>
-      <button mat-button (click)="favorite(item)">
-        <mat-icon *ngIf="item.favorite">start</mat-icon>
-        <mat-icon *ngIf="!item.favorite">star_border</mat-icon>
-      </button>
-      <div class="spacer"></div>
-      <sub>{{ item.time | date: 'dd/MM/yyyy HH:mm:ss' }}</sub>
-    </mat-card-actions>
-  </mat-card>
+<div class="container">
+  <!-- current clipboard -->
+  <app-clipitem-view *ngIf="currentClipboard"
+    [clipitem]="currentClipboard" [isCurrent]="true" 
+    (favorite)="favorite($event)" (cp)="copy($event)" (delete)="delete($event)">
+  </app-clipitem-view>
+  
+  <!-- other items -->
+  <app-clipitem-view *ngFor="let item of cbfiltered | sortBy: 'favorite'; let index = index"
+    [clipitem]="item" [isCurrent]="false" (favorite)="favorite($event)" (cp)="copy($event)" (delete)="delete($event)">
+  </app-clipitem-view>
 
-  <p *ngIf="!clipItems || clipItems.length <= 0">Le presse-papier est vide</p>
+  <p *ngIf="!currentClipboard">Le presse-papier est vide</p>
 </div>

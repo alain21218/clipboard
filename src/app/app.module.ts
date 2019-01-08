@@ -24,6 +24,7 @@ import { DetailComponent } from './components/detail/detail.component';
 import { TopbarComponent } from './components/topbar/topbar.component';
 import { PictureComponent } from './components/picture/picture.component';
 import { SortByPipe } from './pipes/sort-by.pipe';
+import { ClipitemViewComponent } from './components/clipitem-view/clipitem-view.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -39,6 +40,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     TopbarComponent,
     PictureComponent,
     SortByPipe,
+    ClipitemViewComponent,
   ],
   imports: [
     BrowserModule,
