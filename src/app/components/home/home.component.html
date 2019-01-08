@@ -14,8 +14,8 @@
           <mat-icon>content_copy</mat-icon>
       </button>
       <button mat-button (click)="favorite(item)">
-        <mat-icon *ngIf="item.favorite">favorite</mat-icon>
-        <mat-icon *ngIf="!item.favorite">favorite_border</mat-icon>
+        <mat-icon *ngIf="item.favorite">start</mat-icon>
+        <mat-icon *ngIf="!item.favorite">star_border</mat-icon>
       </button>
       <div class="spacer"></div>
       <sub>{{ item.time | date: 'dd/MM/yyyy HH:mm:ss' }}</sub>
