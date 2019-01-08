@@ -4,6 +4,7 @@ import { clipboard, nativeImage } from 'electron';
 import { DetailComponent } from '../detail/detail.component';
 import { PictureComponent } from '../picture/picture.component';
 import { ElectronService } from '../../providers/electron.service';
+import { SortByPipe } from '../../pipes/sort-by.pipe';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +19,8 @@ export class HomeComponent implements OnInit {
 
   image: string; // current clipboard image b64
 
+  sortBy = new SortByPipe();
+
   constructor(
     private snackbar: MatSnackBar,
     private dialog: MatDialog,
@@ -25,11 +28,15 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.clipItems = JSON.parse(localStorage.getItem('cb')) || [];
+    this.retrieve();
     this.repeat = setInterval(() => {
       this.imageTreatment();
       this.textTreatment();
     }, 500);
+  }
+
+  retrieve() {
+    this.clipItems = JSON.parse(localStorage.getItem('cb')) || [];
   }
 
   textTreatment() {
@@ -40,11 +47,15 @@ export class HomeComponent implements OnInit {
           text,
           time: new Date()
         });
-        localStorage.setItem('cb', JSON.stringify(this.clipItems))
+        this.save();
       }
     }
   }
-
+  
+  save() {
+    localStorage.setItem('cb', JSON.stringify(this.clipItems))
+  }
+  
   imageTreatment() {
     const imageNative = clipboard.readImage();
     this.image = imageNative.toDataURL();
@@ -54,7 +65,7 @@ export class HomeComponent implements OnInit {
           image: this.image,
           time: new Date()
         });
-        localStorage.setItem('cb', JSON.stringify(this.clipItems))
+        this.save();
       }
     }
   }
@@ -128,10 +139,17 @@ export class HomeComponent implements OnInit {
     const image = clip.image && clip.image === this.image;
     return text || image ;
   }
+
+  favorite(item: ClipItem) {
+    item.favorite = !item.favorite;
+    this.save();
+    this.retrieve(); // update sort
+  }
 }
 
 interface ClipItem {
   text?: string;
   time: Date;
-  image?: string //b64
+  image?: string, //b64
+  favorite?: boolean
 }

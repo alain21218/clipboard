@@ -1,7 +1,7 @@
 <app-topbar (clear)="clear()" (search)="search($event)" (devtool)="devtool()"></app-topbar>
 
 <div class="container">  
-  <mat-card *ngFor="let item of cbfiltered; let index = index" [class.current-clipboard]="isCurrent(item)">
+  <mat-card *ngFor="let item of cbfiltered | sortBy: 'favorite'; let index = index" [class.current-clipboard]="isCurrent(item)">
     <mat-card-header *ngIf="isCurrent(item)">
       <span>Actuellement dans le presse-papier</span>
     </mat-card-header>
@@ -13,6 +13,11 @@
       <button mat-button (click)="copy(item)">
           <mat-icon>content_copy</mat-icon>
       </button>
+      <button mat-button (click)="favorite(item)">
+        <mat-icon *ngIf="item.favorite">favorite</mat-icon>
+        <mat-icon *ngIf="!item.favorite">favorite_border</mat-icon>
+      </button>
+      <div class="spacer"></div>
       <sub>{{ item.time | date: 'dd/MM/yyyy HH:mm:ss' }}</sub>
     </mat-card-actions>
   </mat-card>

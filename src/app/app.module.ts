@@ -23,6 +23,7 @@ import { MatButtonModule, MatDialogModule, MatInputModule, MatFormFieldModule, M
 import { DetailComponent } from './components/detail/detail.component';
 import { TopbarComponent } from './components/topbar/topbar.component';
 import { PictureComponent } from './components/picture/picture.component';
+import { SortByPipe } from './pipes/sort-by.pipe';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -37,6 +38,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     DetailComponent,
     TopbarComponent,
     PictureComponent,
+    SortByPipe,
   ],
   imports: [
     BrowserModule,
