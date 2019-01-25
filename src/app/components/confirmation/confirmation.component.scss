@@ -1,0 +1,22 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+
+    p {
+        padding: 10px;
+    }
+
+    .actions {
+        display: flex;
+        flex-basis: 100%;
+
+        button + button {
+            margin-left: 10px;
+        }
+    }
+}
+
+.spacer {
+    flex: 1 auto;
+}
