@@ -1,6 +1,7 @@
 <app-topbar (clear)="clear()" (search)="search($event)" (devtool)="devtool()"></app-topbar>
 
 <div class="container">
+<<<<<<< HEAD
   <!-- start loader -->
   <mat-spinner *ngIf="load"></mat-spinner>
 
@@ -17,4 +18,18 @@
 
     <p *ngIf="clipItems.length <= 0">Le presse-papier est vide</p>
   </ng-container>
+=======
+  <!-- current clipboard -->
+  <app-clipitem-view *ngIf="currentClipboard"
+    [clipitem]="currentClipboard" [isCurrent]="true" 
+    (favorite)="favorite($event)" (cp)="copy($event)" (delete)="delete($event)">
+  </app-clipitem-view>
+  
+  <!-- other items -->
+  <app-clipitem-view *ngFor="let item of cbfiltered | sortBy: 'favorite'; let index = index"
+    [clipitem]="item" [isCurrent]="false" (favorite)="favorite($event)" (cp)="copy($event)" (delete)="delete($event)">
+  </app-clipitem-view>
+
+  <p *ngIf="!currentClipboard">Le presse-papier est vide</p>
+>>>>>>> 9e10570ed6fab2448bb74fb6924b283637ca410c
 </div>
